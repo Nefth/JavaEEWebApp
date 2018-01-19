@@ -1,10 +1,10 @@
-package main.webapp.app.repository;
+package app.repository;
 
 public class User {
-    public String name;
-    public String email;
-    public String pwd;
-    public String country;
+    private String name;
+    private String email;
+    private String pwd;
+    private String country;
 
     @Override
     public String toString() {

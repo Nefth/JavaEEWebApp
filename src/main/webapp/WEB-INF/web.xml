@@ -6,12 +6,12 @@
 
     <servlet>
         <servlet-name>LoginImpl</servlet-name>
-        <servlet-class>main.webapp.app.servlets.LoginImpl</servlet-class>
+        <servlet-class>app.servlets.LoginImpl</servlet-class>
     </servlet>
 
     <servlet>
         <servlet-name>Register</servlet-name>
-        <servlet-class>main.webapp.app.servlets.RegisterImpl</servlet-class>
+        <servlet-class>app.servlets.RegisterImpl</servlet-class>
     </servlet>
 
 

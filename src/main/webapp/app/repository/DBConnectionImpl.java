@@ -1,8 +1,11 @@
-package main.webapp.app.repository;
+package app.repository;
 
-import main.webapp.app.servlets.RegisterImpl;
+import app.servlets.RegisterImpl;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Queue;
 
 import static java.lang.System.out;
 
@@ -12,7 +15,7 @@ public class  DBConnectionImpl implements DBConnection {
     private final String dbDriver = "oracle.jdbc.Driver";
 
 
-    private Connection connection = DriverManager.getConnection(url,"sa","");
+    private Connection connection = DriverManager.getConnection(url, "sa", "");
     private Statement statement;
     private ResultSet resultSet;
 
@@ -20,32 +23,39 @@ public class  DBConnectionImpl implements DBConnection {
             " (name,password,mail,country)" +
             " values (?,?,?,?);";
 
-    public  DBConnectionImpl() throws SQLException {
-        try (Connection connection = DriverManager.getConnection(url,"sa","")) {
+    public final String loginQuery = "select MAIL, PASSWORD from USERS;";
 
-            try (Statement statement = connection.createStatement();){
+    public DBConnectionImpl() throws SQLException {
+
+        try (Connection connection = DriverManager.getConnection(url, "sa", "")) {
+
+            try (Statement statement = connection.createStatement()) {
                 statement.execute
                         ("CREATE TABLE IF NOT EXISTS users (" +
-                        "id number(6,0) not null AUTO_INCREMENT primary key," +
-                        "name varchar2(20) not null," +
-                        "password varchar2(12) not null," +
-                        "mail varchar2(40) not null," +
-                        "country varchar(20));");
+                                "id number(6,0) not null AUTO_INCREMENT primary key," +
+                                "name varchar2(20) not null," +
+                                "password varchar2(12) not null," +
+                                "mail varchar2(40) not null," +
+                                "country varchar(20));");
+                statement.execute
+                        ("CREATE TABLE IF NOT EXISTS movies (" +
+                                "id number(6,0) not null AUTO_INCREMENT primary key," +
+                                "title varchar2(20) not null," +
+                                "type varchar2(20) not null," +
+                                "lenght number(4,0) not null," +
+                                "description varchar2(255) not null);");
             }
 
 
-        } catch (SQLException a)
-        {
+        } catch (SQLException a) {
             a.printStackTrace();
         }
-
-
 
 
     }
 
     @Override
-    public long registerUser(User user)  {
+    public long registerUser(User user) {
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(regQuery, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, user.getName());
@@ -58,7 +68,7 @@ public class  DBConnectionImpl implements DBConnection {
             if (check != 1) {
                 throw new IllegalStateException(String.format("Should insert one row. Actually inserted: %d", check));
             }
-             try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+            try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
                 if (!generatedKeys.next()) {
                     throw new IllegalStateException("Query did not return created primary key");
                 }
@@ -74,11 +84,51 @@ public class  DBConnectionImpl implements DBConnection {
         } catch (NullPointerException ex2) {
             out.println("wywala tutaj  na null");
             ex2.printStackTrace();
-        }
-        catch (Exception bla) {
+        } catch (Exception bla) {
             out.println("jakis wyjatek");
         }
         return 0;
     }
-}
 
+    @Override
+    public boolean tryLoginUser(String mail, String password) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(loginQuery)) {
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+
+                if (resultSet.next())
+                    if (resultSet.getString(1).equals(mail) && resultSet.getString(2).equals(password))
+                        return true;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+
+    public boolean checkRegistration(User user) throws SQLException {
+        String QueryReg = "select * from USERS where MAIL = ? or NAME = ?;";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(QueryReg)) {
+            preparedStatement.setString(1, user.getEmail());
+            preparedStatement.setString(2, user.getName());
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (!resultSet.next())
+                return false;
+        }
+
+        return true;
+
+    }
+
+    @Override
+    public List<Movie> movieList() throws SQLException {
+        List<Movie> list = new ArrayList<>();
+        String QueryMovieList = "select * from movies";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(QueryMovieList)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
+        }
+        return null;
+    }
+}

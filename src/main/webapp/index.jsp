@@ -25,8 +25,7 @@
     if (msc == null)
         msc = "";
 %>
-<%=msc
-%>
+
     <div class="wrapped" >
         <nav class="navbar navbar-inverse navbar-left" >
             <div class="container">
@@ -39,7 +38,7 @@
 
                         <button type="submit" class="btn btn-primary">Submit</button>
                     </form>
-
+                    <%=msc      %>
 
                 </div>
 
@@ -82,10 +81,6 @@
 <div id = "menu" class="container"> a </div>
 
 </div>
-
-
-</div>
-
 
 </body>
 </html>

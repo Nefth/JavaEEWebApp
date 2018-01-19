@@ -1,4 +1,4 @@
-package main.webapp.app.servlets;
+package app.servlets;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServlet;
@@ -22,7 +22,7 @@ public class FirstServlet extends HttpServlet{
         RequestDispatcher rd = req.getRequestDispatcher("index.jsp");
     }
     @Override
-    protected void doPost (HttpServletRequest req, HttpServletResponse res) throws IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse res) {
 
     }
 }

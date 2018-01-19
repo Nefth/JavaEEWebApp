@@ -1,11 +1,16 @@
 
-package main.webapp.app.servlets;
+package app.servlets;
+
+import app.repository.DBConnection;
+import app.repository.DBConnectionImpl;
+
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 
 
 public class LoginImpl extends HttpServlet {
@@ -39,7 +44,8 @@ public class LoginImpl extends HttpServlet {
                 out.println("</html>");
                // response.sendRedirect("menu.jsp");
            } else {
-                request.getSession().setAttribute("Wypełnij poprawnie formularz","message" );
+
+                request.getSession().setAttribute("message", "<p class=\"text-white \">Błędne dane logowania<p>");
                 response.sendRedirect("index.jsp");
            }
 
@@ -49,13 +55,14 @@ public class LoginImpl extends HttpServlet {
         }
 
 
-
-
-
-    private boolean testLogin (String login, String haslo){
-        if (login.equals("123")  && haslo.equals("123")  && !haslo.equals("") && !haslo.equals(""))
-            return true;
-        else return false;
+    private boolean testLogin(String login, String haslo) {
+        DBConnection dbConnection = null;
+        try {
+            dbConnection = new DBConnectionImpl();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return dbConnection.tryLoginUser(login, haslo) == true;
     }
 
 }

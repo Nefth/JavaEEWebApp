@@ -1,8 +1,8 @@
-package main.webapp.app.servlets;
+package app.servlets;
 
-import main.webapp.app.repository.DBConnection;
-import main.webapp.app.repository.DBConnectionImpl;
-import main.webapp.app.repository.User;
+import app.repository.DBConnection;
+import app.repository.DBConnectionImpl;
+import app.repository.User;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RegisterImpl extends HttpServlet {
 
@@ -19,15 +21,11 @@ public class RegisterImpl extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         response.setContentType("text/html; charset=utf-8");
+
         PrintWriter out = response.getWriter();
 
-        // if (request.getParameter("emailreg") == null || request.getParameter("emailreg").equals(""))
-        //  response.sendRedirect("index.jsp");
-        //  if (request.getParameter("pwdreg") == null || request.getParameter("pwdreg").equals(""))
 
-        // response.sendRedirect("index.jsp");
-        //if (request.getParameter("name") == null || request.getParameter("name").equals(""))
-        // response.sendRedirect("index.jsp");
+
 
 
         User user = new User(request.getParameter("name"),
@@ -35,15 +33,25 @@ public class RegisterImpl extends HttpServlet {
                   request.getParameter("pwdreg"),
                   request.getParameter("country"));
         out.println(user);
+        long b = 0;
         DBConnection dbConnection = null;
         try {
             dbConnection = new DBConnectionImpl();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        try {
 
-        long b = 8;
-        b = dbConnection.registerUser(user);
+            if (regVerify(user, dbConnection) == true)
+                b = dbConnection.registerUser(user);
+            else {
+                request.getSession().setAttribute("error register", "Email or Name exists in data");
+                response.sendRedirect("index.jsp");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
         out.println(b);
         out.println("<html>");
         out.println("<body>");
@@ -60,6 +68,10 @@ public class RegisterImpl extends HttpServlet {
         out.println("");
         out.println("</body>");
         out.println("</html>");
+    }
+
+    public boolean regVerify(User user, DBConnection dbConnection) throws SQLException {
+        return dbConnection.checkRegistration(user) != true;
     }
 }
 
