@@ -7,13 +7,13 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-public class FirstServlet extends HttpServlet{
+public class FirstServlet extends HttpServlet {
 
     @Override
-    protected void doGet (HttpServletRequest req , HttpServletResponse res) throws IOException  {
+    protected void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
         res.setContentType("text/plain; charset=utf-8");
 
-        PrintWriter  pw = res.getWriter();
+        PrintWriter pw = res.getWriter();
 
         String st = res.getContentType();
 
@@ -21,6 +21,7 @@ public class FirstServlet extends HttpServlet{
 
         RequestDispatcher rd = req.getRequestDispatcher("index.jsp");
     }
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse res) {
 

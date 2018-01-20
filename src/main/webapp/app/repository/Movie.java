@@ -9,10 +9,34 @@ import java.util.List;
 
 public class Movie {
 
+    private long idMovie;
     private String title;
     private String type;
     private int lenght;
     private int rating;
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setIdMovie(long idMovie) {
+        this.idMovie = idMovie;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    private String author;
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     private String description;
     DBConnection dbConnection;
 
@@ -21,8 +45,8 @@ public class Movie {
         this.type = type;
         this.lenght = lenght;
         this.description = description;
-
         rating = 0;
+
     }
 
     public String getTitle() {

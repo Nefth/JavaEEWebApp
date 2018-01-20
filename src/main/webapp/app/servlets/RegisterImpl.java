@@ -25,13 +25,10 @@ public class RegisterImpl extends HttpServlet {
         PrintWriter out = response.getWriter();
 
 
-
-
-
         User user = new User(request.getParameter("name"),
-                  request.getParameter("emailreg"),
-                  request.getParameter("pwdreg"),
-                  request.getParameter("country"));
+                request.getParameter("emailreg"),
+                request.getParameter("pwdreg"),
+                request.getParameter("country"));
         out.println(user);
         long b = 0;
         DBConnection dbConnection = null;

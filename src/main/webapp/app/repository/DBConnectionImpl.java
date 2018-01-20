@@ -9,7 +9,7 @@ import java.util.Queue;
 
 import static java.lang.System.out;
 
-public class  DBConnectionImpl implements DBConnection {
+public class DBConnectionImpl implements DBConnection {
 
     private final String url = "jdbc:h2:E:\\Programowanie\\Java\\MyWebApp/my-local";
     private final String dbDriver = "oracle.jdbc.Driver";
@@ -38,6 +38,7 @@ public class  DBConnectionImpl implements DBConnection {
                                 "mail varchar2(40) not null," +
                                 "country varchar(20));");
                 statement.execute
+
                         ("CREATE TABLE IF NOT EXISTS movies (" +
                                 "id number(6,0) not null AUTO_INCREMENT primary key," +
                                 "title varchar2(20) not null," +
@@ -90,6 +91,9 @@ public class  DBConnectionImpl implements DBConnection {
         return 0;
     }
 
+
+    /*tryLoginUser return true when parameters exists in data base
+     return false when parameters not exists in database           */
     @Override
     public boolean tryLoginUser(String mail, String password) {
         try (PreparedStatement preparedStatement = connection.prepareStatement(loginQuery)) {
@@ -106,7 +110,7 @@ public class  DBConnectionImpl implements DBConnection {
         return false;
     }
 
-
+    @Override
     public boolean checkRegistration(User user) throws SQLException {
         String QueryReg = "select * from USERS where MAIL = ? or NAME = ?;";
         try (PreparedStatement preparedStatement = connection.prepareStatement(QueryReg)) {
@@ -125,10 +129,39 @@ public class  DBConnectionImpl implements DBConnection {
     @Override
     public List<Movie> movieList() throws SQLException {
         List<Movie> list = new ArrayList<>();
-        String QueryMovieList = "select * from movies";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(QueryMovieList)) {
+        String queryMovieList = "select * from movies";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(queryMovieList)) {
             ResultSet resultSet = preparedStatement.executeQuery();
         }
         return null;
     }
+
+    @Override
+    public boolean addMovie(Movie movie) {
+
+        String queryAddMovie = "insert into movies (TITLE, TYPE, LENGHT, DESCRIPTION, AUTHOR)  values (?,?,?,?,?) ";
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(queryAddMovie);
+            preparedStatement.setString(1, movie.getTitle());
+            preparedStatement.setString(2, movie.getType());
+            preparedStatement.setLong(3, movie.getLenght());
+            preparedStatement.setString(4, movie.getDescription());
+            preparedStatement.setString(5, movie.getAuthor()
+            );
+            int number = preparedStatement.executeUpdate();
+            if (number < 1)
+                return false;
+            if (number == 1) {
+                return true;
+
+
+            }
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }
+

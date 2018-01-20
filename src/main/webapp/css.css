@@ -1,18 +1,15 @@
-#top-panel{
+#top-panel {
     background-color: blue;
 }
 
-#menu
-{
+#menu {
     background-color: darkgoldenrod;
     height: 30%;
     float: initial;
 
-
 }
 
-#nav
-{
+#nav {
     background-color: #808080;
     height: 10%;
     position: absolute;
@@ -23,7 +20,8 @@ body {
     margin: 0px auto 0px auto;
     background-color: #c1c1c1;
 }
-#top-panel{
+
+#top-panel {
     margin-top: 10%;
 }
 
@@ -37,9 +35,6 @@ body {
     letter-spacing: 5px;
     background-color: #808080;
 }
-
-
-
 
 .bg-1 {
     background-color: #88BA3A; /* Green */
